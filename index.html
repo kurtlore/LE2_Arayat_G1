@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Virtual Keyboard</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <style>
+            @font-face {
+              font-family: thisFont;
+              src: url(VCR_OSD_MONO_1.001.ttf);
+            }
+            
+            body{
+                background-color: #3349d8; 
+                font-family: thisFont, serif; 
+                margin-left:7%;
+                margin-right:7%;
+            }
+            
+            header{
+                margin-top:1%;
+            }
+            
+            
+            
+            .play{
+                font-size: 75px;
+                color:#EFFBF9; 
+                display: inline-block; 
+            }
+            
+            p{
+                margin:0; 
+            }
+            
+            .score{
+                margin-top:2%;
+                font-size: 50px;
+                color:#EFFBF9; 
+                float:right; 
+                text-align: right;
+            }
+            
+            .form-cont{
+                margin-top:4%;
+                height:auto;
+            }
+            
+            .form-cont-text{
+                font-size: 50px;
+                color:#EFFBF9; 
+            }
+            
+            .form{
+                border-radius: 20px; 
+                background-color: #E5EBEA; 
+                padding-top:1.7%;
+                padding-bottom:1.7%;
+                padding-left:3%;
+                padding-right:1%;
+                display: flex;
+                justify-content: space-between;
+                
+            }
+            
+            .form-text{
+                color:#23339D; 
+                font-size: 60px;
+                line-height: 1.3;
+            }
+            
+            .text-cont{
+                word-wrap: break-word; 
+                width:90%;
+            }
+            
+            .submit{
+                margin-left: 2%;
+                position: relative;
+                right:55px;
+                
+            }
+            
+            .submit-text{
+                font-size: 60px;
+                background-color: #3349D8; 
+                border-radius: 51%; 
+                color:#EFFBF9; 
+                width:190%;
+                
+                
+                
+            }
+            
+            .submit-text:hover{
+                background-color: #3E55ED;
+            }
+            
+            .keyboard-cont{
+                margin-top:4%; 
+                text-align: center;
+            }
+            
+            .btn{
+                font-size: 30px;
+                background-color: #E5EBEA;
+                padding-left:3%;
+                padding-right:3%;
+                padding-top:0px;
+                padding-bottom:0px;
+                color:#23339D; 
+                display:inline-block;
+            }
+            
+            .btn-margin{
+                margin-left: 1.93%;
+            }
+            
+            .found-cont{
+                margin-top:4%;
+            }
+            
+            .found-button-cont{
+                text-align: justify;
+            }
+            
+            .btn2{
+                font-size: 30px;
+                background-color: #E5EBEA;
+                padding-left:4vw;
+                padding-right:4vw;
+                padding-top:0px;
+                padding-bottom:0px; 
+                border-radius: .25rem;
+                color:#23339D; 
+                margin-bottom: 1%;
+                
+            }
+            
+            .btn-margin2{
+               margin-left:2.1%;
+            }
+            
+            
+            
+            .found-text{
+                font-size: 50px;
+                color:#EFFBF9; 
+            }
+            
+        </style>
+    </head>
+    
+    <body>
+        <header>
+            <div class="play">
+                <p>MINI WORDSCAPE</p>
+            </div>
+            
+            <div class="score">
+                <div>SCORE: <span id="myScore">0</span></div>
+            </div>
+        </header>
+        
+        <div class="form-cont">
+            <div class="form-cont-text">
+                <p>WORD:</p>
+            </div>
+            
+            <div class="form">
+                <div class="text-cont">
+                    <p class="form-text" id="myAnswer"></p>
+                </div>
+                
+                <div class="submit" onclick="checkAnswer()" id="mySubmit">
+                    <button class="submit-text" onclick>X</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="keyboard-cont">
+            <button class="btn" onclick="typeE()">E</button>
+            <button class="btn btn-margin" onclick="typeN()">N</button>
+            <button class="btn btn-margin" onclick="typeT()">T</button>
+            <button class="btn btn-margin" onclick="typeD()">D</button>
+        </div>
+        
+        <div class="found-cont">
+            <p class="found-text">FOUND:</p>
+            <div class="found-button-cont">
+                <button class="btn2" onclick="revealDent()" id="wordDent">????</button>
+                <button class="btn2 btn-margin2" onclick="revealTend()" id="wordTend">????</button>
+                <button class="btn2 btn-margin2" onclick="revealNet()" id="wordNet">???</button>
+                <button class="btn2 btn-margin2" onclick="revealTen()" id="wordTen">???</button>
+                <button class="btn2 btn-margin2" onclick="revealEnd()" id="wordEnd">???</button>
+                <button class="btn2 btn-margin2" onclick="revealDen()"  id="wordDen">???</button>
+            </div>
+        </div>
+         
+        <script>
+            
+            var answer = '', doneDent = false, doneTend = false, doneNet = false, doneEnd = false, doneDen = false, doneTen = false, score = 0;  
+            
+            function checkAnswer() {
+                answer =  document.getElementById('myAnswer').innerHTML;
+                
+                if(answer == "DENT"){
+                    if(doneDent == false){
+                        score++; 
+                        showScore(); 
+                        revealDent();
+                        doneDent = true;
+                        clearAnswer(); 
+                    }
+                    
+                    else {
+                        window.alert('You already found this word!')
+                         clearAnswer(); 
+                    }
+                } else if(answer == "TEND"){
+                    if(doneTend == false){
+                        score++; 
+                        showScore();
+                        revealTend();
+                        doneTend = true;
+                        clearAnswer(); 
+                    }
+                    
+                    else {
+                        window.alert('You already found this word!')
+                         clearAnswer(); 
+                    }
+                    
+                } else if(answer == "NET"){
+                    if(doneNet == false){
+                        score++; 
+                        showScore();
+                        revealNet();
+                        doneNet = true;
+                        clearAnswer(); 
+                    }
+                    
+                    else {
+                        window.alert('You already found this word!')
+                         clearAnswer(); 
+                    }
+                    
+                } else if(answer == "TEN"){
+                    if(doneTen == false){
+                        score++; 
+                        showScore();
+                        revealTen();
+                        doneTen = true;
+                        clearAnswer(); 
+                    }
+                    
+                    else {
+                        window.alert('You already found this word!')
+                         clearAnswer(); 
+                    }
+                } else if(answer == "END"){
+                    if(doneEnd == false){
+                        score++; 
+                        showScore();
+                        revealEnd();
+                        doneEnd = true;
+                        clearAnswer(); 
+                    }
+                    
+                    else {
+                        window.alert('You already found this word!')
+                         clearAnswer(); 
+                    }
+                    
+                } else if(answer == "DEN"){
+                    if(doneDen == false){
+                        score++; 
+                        showScore();
+                        revealDen();
+                        doneDen = true;
+                        clearAnswer(); 
+                    }
+                    
+                    else {
+                        window.alert('You already found this word!')
+                         clearAnswer(); 
+                    }
+                } else{
+                    window.alert('Wrong Answer!');
+                    clearAnswer(); 
+                    
+                }
+                
+                
+                
+                   
+            }
+            
+            function showScore(){
+                document.getElementById('myScore').innerHTML = score;
+            }
+            
+            function clearAnswer(){
+                 document.getElementById('myAnswer').innerHTML = '';
+            }
+            
+            function typeE() {
+                document.getElementById('myAnswer').innerHTML += 'E';
+            }
+            
+            function typeN() {
+                document.getElementById('myAnswer').innerHTML += 'N';
+            }
+            
+            function typeT() {
+                document.getElementById('myAnswer').innerHTML += 'T';
+            }
+            
+            function typeD() {
+                document.getElementById('myAnswer').innerHTML += 'D';
+            }
+            
+            function revealDent(){
+                document.getElementById('wordDent').innerHTML = 'DENT'; 
+            }
+            
+            function revealTend(){
+                document.getElementById('wordTend').innerHTML = 'TEND'; 
+            }
+            
+            function revealNet(){
+                document.getElementById('wordNet').innerHTML = 'NET'; 
+            }
+            
+            function revealTen(){
+                document.getElementById('wordTen').innerHTML = 'TEN'; 
+            }
+            
+            function revealEnd(){
+                document.getElementById('wordEnd').innerHTML = 'END'; 
+            }
+            
+            function revealDen(){
+                document.getElementById('wordDen').innerHTML = 'DEN'; 
+            }
+        </script>
+    </body>
+    
+</html>
